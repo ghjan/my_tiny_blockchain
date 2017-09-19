@@ -72,7 +72,8 @@ def _calculate_hash_for_block(block):
     sha = hasher.sha256()
     sha.update(str(block.index) + str(block.timestamp) + str(block.data) + str(block.previous_hash))
     return sha.hexdigest()
-def replaceChain (newBlocks):
+
+def replaceChain(newBlocks):
     if isValidChain(newBlocks) && newBlocks.length > blockchain.length:
         print('Received blockchain is valid. Replacing current blockchain with received blockchain');
         blockchain = newBlocks;
@@ -80,6 +81,21 @@ def replaceChain (newBlocks):
     } else {
         print('Received blockchain invalid');
     }
+};
+
+def isValidChain(blockchainToValidate):
+    if JSON.stringify(blockchainToValidate[0]) !== JSON.stringify(getGenesisBlock()):
+        return False;
+    }
+    var tempBlocks = [blockchainToValidate[0]];
+    for (var i = 1; i < blockchainToValidate.length; i++) {
+        if (isValidNewBlock(blockchainToValidate[i], tempBlocks[i - 1])) {
+            tempBlocks.push(blockchainToValidate[i]);
+        } else {
+            return false;
+        }
+    }
+    return true;
 };
 
 if __name__ == '__main__':
